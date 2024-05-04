@@ -13,7 +13,7 @@ class NetworkManager {
     
     private init() {}
     
-    private let devEndpoint: String = "localhost:8000"
+    private let devEndpoint: String = "http://127.0.0.1:8000"
     
     // MARK: - Requests
     
@@ -27,31 +27,37 @@ class NetworkManager {
         // Create the request
         AF.request(endpoint, method: .get)
             .validate()
-            .responseDecodable(of: [Recipe].self, decoder: decoder) { response in
+            .responseDecodable(of: RecipesResponse.self, decoder: decoder) { response in
                 // Handle the response
                 switch response.result {
-                case .success(let recipes):
+                case .success(let recipesResponse):
+                    let recipes = recipesResponse.recipes
                     print("Successfully fetched \(recipes.count) recipes")
                     completion(recipes)
                 case .failure(let error):
-                    print("Error in NetworkManager.getRecipes: \(error.localizedDescription)")
+                    print("Error in NetworkManager.getRecipes: \(error)")
                 }
             }
         
     }
     
-//    func getComments(completion: @escaping ([String]) -> Void){
-//        let endpoint = devEndpoint + "/api/comments/"
-//        
-//        let decoder = JSONDecoder()
-//        
-//        AF.request(endpoint, method: .get).validate().responseDecodable(of: [String].self, decoder: decoder){ response in
-//            switch response.result {
-//            case.success(let comments):
-//                print("Succesfully fetched \(comments.)")
-//            }
-//        }
-//    }
+    func getComments(completion: @escaping ([String]) -> Void){
+        let endpoint = devEndpoint + "/api/comments/"
+        
+        let decoder = JSONDecoder()
+        
+        AF.request(endpoint, method: .get).validate().responseDecodable(of: CommentsResponse.self, decoder: decoder){ response in
+            switch response.result {
+            case .success(let commentsResponse):
+                let comments = commentsResponse.comments
+                print("Successfully fetched \(comments.count) comments")
+                completion(comments)
+            case .failure(let error):
+                print("Error in NetworkManager.getRecipes: \(error)")
+            }
+            
+        }
+    }
     
     func createComment(message: String, userId: Int, recipeId: Int, completion: @escaping (String) -> Void){
         // Specify the endpoint
@@ -59,7 +65,8 @@ class NetworkManager {
         
         // Define the request body
         let parameters: Parameters = [
-            "text": message
+            "text": message,
+            "post_date": Date().description
         ]
         
         // Create a decoder
@@ -74,7 +81,7 @@ class NetworkManager {
                 print("Successfully added comment \(message)")
                 completion(message)
             case .failure(let error):
-                print("Error in NetworkManager.createPost: \(error.localizedDescription)")
+                print("Error in NetworkManager.createPost: \(error)")
             }
 
         }

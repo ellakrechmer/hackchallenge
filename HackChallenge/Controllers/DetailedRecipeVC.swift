@@ -17,11 +17,12 @@ class DetailedRecipeVC : UIViewController {
     private let dateLabel = UILabel()
     private let commentLabel = UILabel()
     private var commentCollectionView : UICollectionView!
+    private let refreshControl = UIRefreshControl()
     
     
     // MARK: - Properties (data)
     private let recipe : Recipe
-    private let comments : [String]
+    private var comments : [String]
     private let date : String
     private let userId : Int
     private let recipeId : Int
@@ -39,11 +40,14 @@ class DetailedRecipeVC : UIViewController {
         setupCommentLabel()
         setupCommentCollectionView()
         
+        fetchComments()
+        
     }
     
     init(recipe: Recipe){
         self.recipe = recipe
-        self.comments = recipe.comments
+       
+        self.comments = recipe.recipeComments
         self.date = Date.convertToAgo(recipe.postDate)()
         self.userId = recipe.userId
         self.recipeId = recipe.id
@@ -52,6 +56,19 @@ class DetailedRecipeVC : UIViewController {
     
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Networking
+    @objc private func fetchComments(){
+        NetworkManager.shared.getComments { [weak self] comments in
+            guard let self = self else {return}
+            self.comments = comments
+            DispatchQueue.main.async {
+                self.commentCollectionView.reloadData()
+                self.refreshControl.endRefreshing()
+            }
+            
+        }
     }
     
     // MARK: - Set Up Views
@@ -73,6 +90,8 @@ class DetailedRecipeVC : UIViewController {
             recipeImageView.heightAnchor.constraint(equalToConstant: 329),
             recipeImageView.widthAnchor.constraint(equalToConstant: 329)
         ])
+        
+       
         
     }
     
@@ -145,6 +164,10 @@ class DetailedRecipeVC : UIViewController {
             commentCollectionView.topAnchor.constraint(equalTo: commentLabel.bottomAnchor, constant: 16),
             commentCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        
+        // Add refresh control
+        refreshControl.addTarget(self, action: #selector(fetchComments), for: .valueChanged)
+        commentCollectionView.refreshControl = refreshControl
         
     }
 }

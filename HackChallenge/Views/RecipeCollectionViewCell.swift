@@ -26,7 +26,7 @@ class RecipeCollectionViewCell : UICollectionViewCell {
 //     var recipeTitle : String = ""
     private var postId = ""
     private var likeCount = 0
-    private var likes : [String] = []
+//    private var likes : [String] = []
     
     // MARK: - init
     
@@ -36,10 +36,8 @@ class RecipeCollectionViewCell : UICollectionViewCell {
         
         setupRecipeImage()
         setupRecipeTitleLabel()
-//        setupRecipeSubtitleLabel()
-//        setupBookmark()
-        setupLikeButton()
-        setupLikeNumberLabel()
+//        setupLikeButton()
+//        setupLikeNumberLabel()
         
         self.isUserInteractionEnabled = true
         
@@ -56,23 +54,20 @@ class RecipeCollectionViewCell : UICollectionViewCell {
     func configure(recipe: Recipe) {
         recipeImage.sd_setImage(with: URL(string: recipe.imageUrl))
         recipeTitleLabel.text = recipe.title
+//        
+//        likeCount = recipe.likes.count
+//        likes = recipe.likes
         
-//        self.imageUrl = recipe.imageUrl
-//        self.recipeTitle = recipe.name
-        
-        likeCount = recipe.likes.count
-        likes = recipe.likes
-        
-        if (!recipe.likes.contains("egk46")){
-            likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
-            likeButton.tintColor = UIColor.hackchallenge.lightPurple
-        }
-        else {
-            likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-            likeButton.tintColor = UIColor.hackchallenge.purple
-        }
-        
-        likeNumberLabel.text = String(likeCount)
+//        if (!recipe.likes.contains("egk46")){
+//            likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+//            likeButton.tintColor = UIColor.hackchallenge.lightPurple
+//        }
+//        else {
+//            likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+//            likeButton.tintColor = UIColor.hackchallenge.purple
+//        }
+//        
+//        likeNumberLabel.text = String(likeCount)
         
         
 
@@ -111,36 +106,6 @@ class RecipeCollectionViewCell : UICollectionViewCell {
             recipeTitleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
     }
-    
-//    private func setupRecipeSubtitleLabel(){
-//        
-//        recipeSubtitle.textColor = UIColor.hackchallenge.silver
-//        recipeSubtitle.font = .systemFont(ofSize: 12, weight: .regular)
-//        
-//        contentView.addSubview(recipeSubtitle)
-//        recipeSubtitle.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        NSLayoutConstraint.activate([
-//            recipeSubtitle.topAnchor.constraint(equalTo: recipeTitleLabel.bottomAnchor, constant: 4),
-//            recipeSubtitle.leadingAnchor.constraint(equalTo: recipeTitleLabel.leadingAnchor, constant: 0),
-//        ])
-//        
-//    }
-//    
-//    private func setupBookmark(){
-//        bookmark.image = UIImage(systemName: "bookmark.fill")
-//        bookmark.tintColor = UIColor.hackchallenge.purple
-//        
-//        contentView.addSubview(bookmark)
-//        
-//        bookmark.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            bookmark.topAnchor.constraint(equalTo: recipeTitleLabel.topAnchor, constant: 0),
-//            bookmark.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-//            bookmark.heightAnchor.constraint(equalToConstant: 20),
-//            bookmark.widthAnchor.constraint(equalToConstant: 20)
-//        ])
-//    }
     
     private func setupLikeButton(){
         likeButton.contentMode = .scaleAspectFit

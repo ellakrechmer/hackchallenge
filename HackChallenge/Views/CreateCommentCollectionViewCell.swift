@@ -85,7 +85,12 @@ class CreateCommentCollectionViewCell : UICollectionViewCell {
         // Send a POST request to create a comment
         let message = textField.text ?? ""
         
+        print("userId \(userId)")
+        print("recipeId \(recipeId)")
+        
+        
         NetworkManager.shared.createComment(message: message, userId: userId, recipeId: recipeId ) { comment in
+    
             
         }
         

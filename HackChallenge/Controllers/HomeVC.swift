@@ -15,8 +15,9 @@ class HomeVC: UIViewController {
 
     // MARK: - Properties (data)
 
-    private var allRecipes: [Recipe] = Recipe.dummyData
-    private var recipes: [Recipe] = Recipe.dummyData
+//    private var allRecipes: [Recipe] = Recipe.dummyData
+    private var recipes: [Recipe] = []
+    private var refreshControl = UIRefreshControl()
 
     
     override func viewDidLoad() {
@@ -26,7 +27,22 @@ class HomeVC: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .white
         setupRecipeCollectionView()
+        fetchRecipes()
         
+    }
+    
+    // MARK: - Networking
+    @objc private func fetchRecipes(){
+        NetworkManager.shared.getRecipes { [weak self] recipes in
+            guard let self = self else {return}
+            self.recipes = recipes
+            
+            DispatchQueue.main.async {
+                self.recipeCollectionView.reloadData()
+                self.refreshControl.endRefreshing()
+            }
+            
+        }
     }
 
     // MARK: - Set Up Views
@@ -51,11 +67,15 @@ class HomeVC: UIViewController {
         view.addSubview(recipeCollectionView)
 
         recipeCollectionView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(32)
-            make.trailing.equalToSuperview().inset(32)
+            make.leading.equalToSuperview().offset(24)
+            make.trailing.equalToSuperview().inset(24)
             make.top.equalToSuperview().offset(12)
             make.bottom.equalToSuperview()
         }
+        
+        // Add refresh control
+        refreshControl.addTarget(self, action: #selector(fetchRecipes), for: .valueChanged)
+        recipeCollectionView.refreshControl = refreshControl
     }
 
 }
