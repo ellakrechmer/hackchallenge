@@ -41,8 +41,8 @@ class NetworkManager {
         
     }
     
-    func getComments(completion: @escaping ([String]) -> Void){
-        let endpoint = devEndpoint + "/api/comments/"
+    func getComments(recipeId:Int, completion: @escaping ([String]) -> Void){
+        let endpoint = devEndpoint + "/api/recipes/\(recipeId)comments/"
         
         let decoder = JSONDecoder()
         

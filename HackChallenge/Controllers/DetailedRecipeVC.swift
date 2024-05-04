@@ -60,7 +60,7 @@ class DetailedRecipeVC : UIViewController {
     
     // MARK: - Networking
     @objc private func fetchComments(){
-        NetworkManager.shared.getComments { [weak self] comments in
+        NetworkManager.shared.getComments(recipeId:recipeId) { [weak self] comments in
             guard let self = self else {return}
             self.comments = comments
             DispatchQueue.main.async {

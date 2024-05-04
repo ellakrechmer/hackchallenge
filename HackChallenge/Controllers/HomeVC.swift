@@ -16,7 +16,7 @@ class HomeVC: UIViewController {
     // MARK: - Properties (data)
 
 //    private var allRecipes: [Recipe] = Recipe.dummyData
-    private var recipes: [Recipe] = []
+    private var recipes: [Recipe] = Recipe.dummyData
     private var refreshControl = UIRefreshControl()
 
     
